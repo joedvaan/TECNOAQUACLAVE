@@ -1,51 +1,72 @@
+/* 🔷 CONTENEDOR PRINCIPAL */
 .reserva-page {
-  min-height: 100vh;
+  min-height: 100vh; 
+  /* 👉 Ocupa toda la pantalla */
+
   display: flex;
   justify-content: center;
   align-items: center;
+  /* 👉 Centra el formulario */
+
   background: linear-gradient(135deg, #4facfe, #140375);
+  /* 👉 Fondo degradado */
+
   background-size: 300% 300%;
+  /* 👉 Permite animación */
+
   animation: gradientMove 10s ease infinite;
+  /* 👉 Fondo en movimiento */
+
   font-family: "Segoe UI", sans-serif;
 }
 
+/* 🌈 ANIMACIÓN FONDO */
 @keyframes gradientMove {
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
 
+/* 🧱 TARJETA */
 .reserva-card {
   background: #fff;
   padding: 25px;
   border-radius: 12px;
   width: 320px;
+
   box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  /* 👉 Sombra elegante */
 }
 
+/* 🔤 TÍTULO */
 .reserva-card h2 {
   text-align: center;
   color: #140375;
   margin-bottom: 15px;
 }
 
+/* 📋 FORMULARIO */
 .reserva-form {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  /* 👉 Espacio entre campos */
 }
 
+/* 🔤 INPUTS */
 .reserva-form input {
   padding: 8px;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
 
+/* FOCUS INPUT */
 .reserva-form input:focus {
   border-color: #4facfe;
   outline: none;
 }
 
+/* 🔘 BOTÓN */
 .reserva-form button {
   background: #4facfe;
   color: #fff;
@@ -53,26 +74,32 @@
   padding: 10px;
   border-radius: 6px;
   cursor: pointer;
+
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
+/* HOVER BOTÓN */
 .reserva-form button:hover {
   background: #140375;
   transform: scale(1.05);
 }
 
-/* Confirmación */
+/* ✅ CONFIRMACIÓN (TEXTO) */
 .reserva-confirmacion {
   margin-top: 20px;
   text-align: center;
+
   animation: fadeIn 0.6s ease;
+  /* 👉 Aparece suavemente */
 }
 
+/* ✨ ANIMACIÓN SIMPLE */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(-10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* 🔽 SELECT + INPUT */
 .reserva-form select,
 .reserva-form input {
   padding: 8px;
@@ -80,25 +107,32 @@
   border: 1px solid #ccc;
 }
 
+/* FOCUS */
 .reserva-form select:focus,
 .reserva-form input:focus {
   border-color: #4facfe;
   outline: none;
 }
+
+/* 🌑 FONDO DEL MODAL */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
+
   background: rgba(20, 3, 117, 0.7);
+  /* 👉 Oscurece el fondo */
+
   display: flex;
   justify-content: center;
   align-items: center;
+
   animation: fadeIn 0.4s ease;
 }
 
-/* Caja del modal */
+/* 📦 CAJA MODAL */
 .modal {
   background: #fff;
   color: #333;
@@ -106,15 +140,20 @@
   border-radius: 12px;
   width: 320px;
   text-align: center;
+
   box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+
   animation: slideUp 0.5s ease;
+  /* 👉 Aparece desde abajo */
 }
 
+/* TÍTULO MODAL */
 .modal h3 {
   color: #140375;
   margin-bottom: 15px;
 }
 
+/* 🔘 BOTÓN CERRAR */
 .close-btn {
   margin-top: 15px;
   background: #4facfe;
@@ -123,20 +162,59 @@
   padding: 8px 14px;
   border-radius: 6px;
   cursor: pointer;
+
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
+/* HOVER BOTÓN */
 .close-btn:hover {
   background: #140375;
   transform: scale(1.05);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* ✨ ANIMACIÓN MODAL */
+@keyframes slideUp {
+  from { 
+    transform: translateY(40px); 
+    opacity: 0; 
+  }
+  to { 
+    transform: translateY(0); 
+    opacity: 1; 
+  }
+}
+.acciones {
+  margin-top: 8px;
+  display: flex;
+  gap: 10px;
 }
 
-@keyframes slideUp {
-  from { transform: translateY(40px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+.btn-editar {
+  background-color: #4caf50; /* verde */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-editar:hover {
+  background-color: #45a049;
+  transform: scale(1.05);
+}
+
+.btn-cancelar {
+  background-color: #f44336; /* rojo */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-cancelar:hover {
+  background-color: #d32f2f;
+  transform: scale(1.05);
 }

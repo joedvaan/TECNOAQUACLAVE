@@ -1,0 +1,73 @@
+### 🔹 Probar servidor
+GET http://localhost:5000/
+
+
+### 🔹 Obtener usuarios
+GET http://localhost:5000/api/users
+
+
+### 🔹 Crear usuario
+POST http://localhost:5000/api/users
+Content-Type: application/json
+
+{
+  "nombre": "Johan Valencia",
+  "email": "johan@test.com"
+}
+
+
+### 🔹 Obtener usuario por ID
+GET http://localhost:5000/api/users/ID_AQUI
+
+
+### 🔹 Actualizar usuario
+PUT http://localhost:5000/api/users/ID_AQUI
+Content-Type: application/json
+
+{
+  "nombre": "Johan Actualizado"
+}
+
+
+### 🔹 Eliminar usuario
+DELETE http://localhost:5000/api/users/ID_AQUI
+
+
+### 🔹 Registro
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "nombre": "Johan",
+  "tipoDocumento": "CC",
+  "documento": "123456",
+  "email": "johan@test.com",
+  "password": "123456"
+}
+
+
+### 🔹 Login
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "johan@test.com",
+  "password": "123456"
+}
+
+
+### 🔹 Crear reserva
+POST http://localhost:5000/api/reservas
+Content-Type: application/json
+
+{
+  "nombre": "Johan",
+  "fecha": "2026-04-25",
+  "hora": "10:00",
+  "servicio": "Electricidad",
+  "tecnico": "Laura Lopez"
+}
+
+
+### 🔹 Obtener reservas
+GET http://localhost:5000/api/reservas

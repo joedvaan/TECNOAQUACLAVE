@@ -1,0 +1,193 @@
+/* 🔷 CONTENEDOR PRINCIPAL */
+.home {
+  font-family: Arial, sans-serif; 
+  /* 👉 Define la fuente general de la página */
+}
+
+/* 🔷 HERO */
+.hero {
+  background: linear-gradient(135deg, #1e3c72, #2a5298); 
+  /* 👉 Fondo degradado azul */
+  color: white;
+  padding: 80px 20px; 
+  /* 👉 Espaciado grande arriba/abajo */
+  text-align: center; 
+  /* 👉 Centra el texto */
+}
+
+.hero h1 {
+  font-size: 36px; 
+  margin-bottom: 10px; 
+  /* 👉 Espacio debajo del título */
+}
+
+.hero p {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+/* 🔘 BOTÓN PRINCIPAL */
+.btn-hero {
+  background: #00c6ff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 30px; 
+  /* 👉 Botón redondeado */
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s; 
+  /* 👉 Animación suave */
+}
+
+.btn-hero:hover {
+  transform: scale(1.1); 
+  /* 👉 Se agranda */
+  background: #0072ff; 
+  /* 👉 Cambia color */
+}
+
+/* 🎠 CARRUSEL */
+.carousel {
+  text-align: center;
+  margin: 40px 0;
+}
+
+/* 🖼 IMAGEN */
+.carousel-img {
+  width: 80%;
+  max-width: 600px;
+  height: 300px;
+  object-fit: cover; 
+  /* 👉 Ajusta imagen sin deformarla */
+  border-radius: 15px;
+}
+
+/* 📝 TEXTO */
+.carousel-text {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/* 🛠 SERVICIOS */
+.services {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* GRID DE SERVICIOS */
+.services-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap; 
+  /* 👉 Se adapta en móviles */
+}
+
+/* 🧱 TARJETA */
+.card {
+  background: rgb(184, 244, 4); 
+  /* 👉 Color llamativo (puedes cambiarlo a algo más pro) */
+  padding: 25px;
+  width: 250px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* HOVER TARJETA */
+.card:hover {
+  transform: translateY(-10px); 
+  /* 👉 Efecto de levantar */
+}
+
+/* 💬 TESTIMONIOS */
+.testimonials {
+  background: #f5f5f5;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+/* GRID TESTIMONIOS */
+.testimonials-grid {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* TARJETA TESTIMONIO */
+.test-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 250px;
+  font-style: italic;
+}
+
+/* 🎠 CONTENEDOR MEJORADO */
+.carousel {
+  text-align: center;
+  margin: 50px 0;
+}
+
+/* CONTENEDOR RELATIVO */
+.carousel-container {
+  position: relative; 
+  /* 👉 Necesario para ubicar botones */
+  display: inline-block;
+}
+
+/* 🖼 IMAGEN MEJORADA */
+.carousel-img {
+  width: 600px;
+  max-width: 90%;
+  height: 320px;
+  object-fit: cover;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
+  /* 👉 Sombra más pro */
+  transition: 0.3s;
+}
+
+/* 🔘 BOTONES */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%); 
+  /* 👉 Centrado vertical */
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  font-size: 28px;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+/* ⬅ IZQUIERDA */
+.carousel-btn.left {
+  left: -20px;
+}
+
+/* ➡ DERECHA */
+.carousel-btn.right {
+  right: -20px;
+}
+
+/* HOVER BOTONES */
+.carousel-btn:hover {
+  background: #0072ff;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* TEXTO FINAL */
+.carousel-text {
+  margin-top: 15px;
+  font-weight: bold;
+  font-size: 18px;
+}

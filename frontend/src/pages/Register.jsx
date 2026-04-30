@@ -1,124 +1,179 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import "../styles/registro.css";
 
+const API = "http://localhost:5000/api/auth/register";
+
 function Register() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     nombre: "",
-    tipoDocumento: "",
-    documento: "",
+    tipoDocumento: "Cédula de ciudadanía",
+    cedula: "",
     email: "",
     password: "",
-    confirmPassword: "",
+    confirmPassword: ""
   });
 
-  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
+  // manejar inputs
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setSubmitted(false);
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value
+    });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // validaciones
+  const validar = () => {
     if (
-      form.nombre &&
-      form.tipoDocumento &&
-      form.documento &&
-      form.email &&
-      form.password &&
-      form.password === form.confirmPassword
+      !form.nombre ||
+      !form.tipoDocumento ||
+      !form.cedula ||
+      !form.email ||
+      !form.password ||
+      !form.confirmPassword
     ) {
-      setSubmitted(true);
+      setError("Todos los campos son obligatorios");
+      return false;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(form.email)) {
+      setError("Correo inválido");
+      return false;
+    }
+
+    if (form.password.length < 6) {
+      setError("La contraseña debe tener mínimo 6 caracteres");
+      return false;
+    }
+
+    if (form.password !== form.confirmPassword) {
+      setError("Las contraseñas no coinciden");
+      return false;
+    }
+
+    if (!/^\d+$/.test(form.cedula)) {
+      setError("La cédula debe ser numérica");
+      return false;
+    }
+
+    return true;
+  };
+
+  // submit
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    if (!validar()) return;
+
+    try {
+      setLoading(true);
+
+      const res = await axios.post(API, {
+        nombre: form.nombre,
+        tipoDocumento: form.tipoDocumento,
+        cedula: form.cedula,
+        email: form.email,
+        password: form.password
+      });
+
+      setSuccess(res.data.msg || "Registro exitoso ✅");
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 1500);
+
+    } catch (err) {
+      console.error(err);
+
+      if (err.response) {
+        setError(err.response.data.msg || "Error al registrar");
+      } else {
+        setError("No se pudo conectar con el servidor");
+      }
+
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="register-page">
-      <div className="register-card">
+    <div className="registro-container">
+      <div className="registro-card">
         <h2>Crear cuenta</h2>
-        <form className="register-form" onSubmit={handleSubmit}>
-          <label htmlFor="nombre">Nombre completo</label>
+
+        {error && <div className="error">{error}</div>}
+        {success && <div className="success">{success}</div>}
+
+        <form onSubmit={handleSubmit} className="registro-form">
+
           <input
-            id="nombre"
             type="text"
             name="nombre"
+            placeholder="Nombre completo"
             value={form.nombre}
             onChange={handleChange}
-            placeholder="Tu nombre"
           />
 
-          <label htmlFor="tipoDocumento">Tipo de documento</label>
           <select
-            id="tipoDocumento"
             name="tipoDocumento"
             value={form.tipoDocumento}
             onChange={handleChange}
           >
-            <option value="">Selecciona...</option>
-            <option value="CC">Cédula de ciudadanía</option>
-            <option value="TI">Tarjeta de identidad</option>
-            <option value="CE">Cédula de extranjería</option>
-            <option value="PAS">Pasaporte</option>
+            <option value="Cédula de ciudadanía">Cédula de ciudadanía</option>
+            <option value="Tarjeta de identidad">Tarjeta de identidad</option>
+            <option value="Pasaporte">Pasaporte</option>
           </select>
 
-          <label htmlFor="documento">Número de documento</label>
           <input
-            id="documento"
             type="text"
-            name="documento"
-            value={form.documento}
+            name="cedula"
+            placeholder="Número de documento"
+            value={form.cedula}
             onChange={handleChange}
-            placeholder="Ej: 123456789"
           />
 
-          <label htmlFor="email">Correo electrónico</label>
           <input
-            id="email"
             type="email"
             name="email"
+            placeholder="Correo electrónico"
             value={form.email}
             onChange={handleChange}
-            placeholder="ejemplo@correo.com"
           />
 
-          <label htmlFor="password">Contraseña</label>
           <input
-            id="password"
             type="password"
             name="password"
+            placeholder="Contraseña"
             value={form.password}
             onChange={handleChange}
-            placeholder="Tu contraseña"
           />
 
-          <label htmlFor="confirmPassword">Confirmar contraseña</label>
           <input
-            id="confirmPassword"
             type="password"
             name="confirmPassword"
+            placeholder="Confirmar contraseña"
             value={form.confirmPassword}
             onChange={handleChange}
-            placeholder="Repite tu contraseña"
           />
 
-          <button type="submit">Registrarse</button>
+          <button type="submit" disabled={loading}>
+            {loading ? "Registrando..." : "Registrarse"}
+          </button>
+
         </form>
 
-        {submitted && (
-          <div className="register-confirmacion">
-            <h3>¡Registro exitoso 🎉!</h3>
-            <p>Bienvenido, {form.nombre}</p>
-            <p>
-              Documento: {form.tipoDocumento} {form.documento}
-            </p>
-          </div>
-        )}
-
-        <div className="register-links">
-          <p>¿Ya tienes cuenta?</p>
-          <Link to="/login">Inicia sesión aquí</Link>
-        </div>
+        <p className="registro-link">
+          ¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link>
+        </p>
       </div>
     </div>
   );

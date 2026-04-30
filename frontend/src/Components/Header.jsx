@@ -1,46 +1,106 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../styles/header.css";
 
 function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [showWelcome, setShowWelcome] = useState(true);
 
-  const toggleMenu = () => setMenuOpen(!menuOpen);
-  const closeMenu = () => setMenuOpen(false);
+  // 🔐 Obtener usuario
+  let user = null;
+
+  try {
+    const storedUser = localStorage.getItem("user");
+    user = storedUser ? JSON.parse(storedUser) : null;
+  } catch (error) {
+    user = null;
+  }
+
+  // 🧠 MENSAJE SEGÚN HORA
+  const getGreeting = () => {
+    const hour = new Date().getHours();
+
+    if (hour < 12) return "Buenos días ☀️";
+    if (hour < 18) return "Buenas tardes 🌤️";
+    return "Buenas noches 🌙";
+  };
+
+  // ⏳ OCULTAR BIENVENIDA AUTOMÁTICAMENTE
+  useEffect(() => {
+    if (user) {
+      const timer = setTimeout(() => {
+        setShowWelcome(false);
+      }, 4000); // ⏱ 4 segundos
+
+      return () => clearTimeout(timer);
+    }
+  }, [user]);
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    window.location.href = "/login";
+  };
 
   return (
-    <header className="app-header">
-     
-      <div className="logo">
-        <img src="./logo.png" alt="Logo" />
-      </div>
+    <>
+      {/* 🔥 BIENVENIDA NIVEL APP */}
+      {user && showWelcome && (
+        <div className="welcome-pro">
+          <span>
+            {getGreeting()}, <strong>{user.nombre}</strong> 👋
+          </span>
+        </div>
+      )}
 
-      
-      <h1 className="welcome-sign">¡Bienvenido a nuestra plataforma!</h1>
+      <header className="header">
+        
+        {/* 🔷 LOGO */}
+        <div className="header-left">
+          <img src="/logo.png" alt="logo" className="logo" />
+          <h2>TECNOAQUACLAVE</h2>
+        </div>
 
-    
-      <div className="menu">
-        <button
-          className={`welcome-btn ${menuOpen ? "active" : ""}`}
-          onClick={toggleMenu}
-        >
-          Ingresa aquí
-          <span className={`arrow ${menuOpen ? "rotate" : ""}`}>▼</span>
-        </button>
+        {/* 🔷 DERECHA */}
+        <div className="header-right">
 
-        <nav className={`dropdown-menu ${menuOpen ? "show" : ""}`}>
-          <Link to="/login" onClick={closeMenu} className="menu-item">
-            <span className="icon">👤</span> Inicio de sesión
-          </Link>
-          <Link to="/registro" onClick={closeMenu} className="menu-item">
-            <span className="icon">✍️</span> Registro
-          </Link>
-          <Link to="/reserva" onClick={closeMenu} className="menu-item">
-            <span className="icon">📅</span> Reserva
-          </Link>
-        </nav>
-      </div>
-    </header>
+          {user ? (
+            <div className="user-box" onClick={() => setOpen(!open)}>
+              
+              <div className="avatar">
+                {user.nombre?.charAt(0).toUpperCase() || "U"}
+              </div>
+
+              <span className="user-name">
+                {user.nombre}
+              </span>
+
+              {open && (
+                <div className="dropdown-menu-pro">
+                  <Link to="/"> Inicio</Link>
+                  <Link to="/Mis-Reservas"> Mis Reservas</Link>
+                  <Link to="/registro">Registro</Link>
+                  <button onClick={logout}>🚪 Cerrar sesión</button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="login-dropdown">
+              <button className="login-btn">
+                👤 Ingresa aquí ▼
+              </button>
+
+              <div className="dropdown-menu">
+                <Link to="/login">Iniciar sesión</Link>
+                <Link to="/registro">Registrarse</Link>
+                <Link to="/mis-reservas"> Mis Reservas</Link>
+              </div>
+            </div>
+          )}
+
+        </div>
+      </header>
+    </>
   );
 }
 

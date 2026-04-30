@@ -1,171 +1,388 @@
-.app-header {
-  position: sticky;
+/* 🔥 RESET BÁSICO */
+body {
+  margin: 0; /* 👉 Quita el margen por defecto del navegador */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* 👉 Fuente moderna */
+}
+
+/* 🔷 HEADER PRINCIPAL */
+.header {
+  display: flex; /* 👉 Organiza elementos en fila */
+  justify-content: space-between; /* 👉 Separa izquierda y derecha */
+  align-items: center; /* 👉 Centra verticalmente */
+  padding: 25px 50px; /* 👉 Espaciado interno */
+
+  background: linear-gradient(90deg, #343535, #2a5298); /* 👉 Fondo degradado */
+  color: white; /* 👉 Texto blanco */
+
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25); /* 👉 Sombra elegante */
+  border-bottom: 3px solid rgba(255,255,255,0.1); /* 👉 Línea inferior suave */
+
+  position: sticky; /* 👉 Se queda fijo arriba */
   top: 0;
-  z-index: 1000;
-  background: hsl(270, 1%, 60%);
-  color: #747272;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 25px 60px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  animation: slideDown 0.6s ease;
+  z-index: 1000; /* 👉 Prioridad alta */
+
+  animation: slideDown 0.6s ease; /* 👉 Animación al cargar */
 }
 
+/* ✨ ANIMACIÓN HEADER */
 @keyframes slideDown {
-  from { transform: translateY(-100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    opacity: 0; /* 👉 Empieza invisible */
+    transform: translateY(-40px); /* 👉 Desde arriba */
+  }
+  to {
+    opacity: 1; /* 👉 Aparece */
+    transform: translateY(0); /* 👉 Baja a su lugar */
+  }
 }
 
-.logo img {
-  height: 70px;
-  transition: transform 0.4s ease;
-  animation: logoPulse 2s infinite;
-}
-
-@keyframes logoPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.08); }
-}
-
-.menu {
-  position: relative;
-}
-
-.welcome-btn {
-  background: #4facfe;
-  color: #fff;
-  border: none;
-  padding: 14px 22px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 1rem;
+/* 🔷 SECCIÓN IZQUIERDA */
+.header-left {
   display: flex;
   align-items: center;
-  gap: 8px;
-  transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-  animation: pulse 2s infinite;
+  gap: 12px; /* 👉 Espacio entre logo y texto */
 }
 
-@keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(79,172,254, 0.7); }
-  70% { box-shadow: 0 0 0 10px rgba(79,172,254, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(79,172,254, 0); }
+/* 🖼 LOGO */
+.logo {
+  width: 70px;
+  transition: transform 0.3s ease; /* 👉 Animación suave */
+  cursor: pointer;
 }
 
-.welcome-btn:hover {
-  background: #0e2a7c;
-  transform: scale(1.1);
+/* 🔥 ANIMACIÓN LOGO */
+.logo:hover {
+  transform: scale(1.15) rotate(-3deg); /* 👉 Crece y rota */
 }
 
-.arrow {
+/* 🔷 TEXTO MARCA */
+.header-left h2 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+/* 🔷 SECCIÓN DERECHA */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* 👤 USUARIO */
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  position: relative; /* 👉 Necesario para dropdown */
+}
+
+/* 🔵 AVATAR */
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%; /* 👉 Hace círculo */
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+/* ANIMACIÓN AVATAR */
+.avatar:hover {
+  transform: scale(1.1); /* 👉 Se agranda */
+}
+
+/* 👋 NOMBRE */
+.user-name {
+  font-weight: bold;
+  font-size: 15px;
+}
+
+/* 🔽 DROPDOWN USUARIO */
+.dropdown-menu-pro {
+  position: absolute;
+  top: 55px; /* 👉 Posición debajo */
+  right: 0;
+  background: white;
+  color: black;
+  border-radius: 12px;
+  overflow: hidden;
+  width: 190px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+
+  animation: fadeIn 0.3s ease; /* 👉 Animación */
+}
+
+/* ITEMS DROPDOWN */
+.dropdown-menu-pro a,
+.dropdown-menu-pro button {
+  display: block;
+  padding: 12px 15px;
+  text-decoration: none;
+  color: black;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* HOVER */
+.dropdown-menu-pro a:hover,
+.dropdown-menu-pro button:hover {
+  background: #f5f5f5; /* 👉 Efecto al pasar el mouse */
+}
+
+/* BOTÓN LOGOUT */
+.dropdown-menu-pro button:last-child {
+  color: red;
+  font-weight: bold;
+}
+
+/* 🔐 LOGIN */
+.login-dropdown {
+  position: relative; /* 👉 Base para dropdown */
+}
+
+/* BOTÓN LOGIN */
+.login-btn {
+  padding: 10px 18px;
+  border-radius: 25px;
+  border: none;
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* HOVER LOGIN */
+.login-btn:hover {
+  transform: scale(1.1); /* 👉 Crece */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* 🔽 DROPDOWN LOGIN */
+.dropdown-menu {
+  display: none; /* 👉 Oculto por defecto */
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  min-width: 160px;
+}
+
+/* MOSTRAR */
+.login-dropdown:hover .dropdown-menu {
+  display: block; /* 👉 Se muestra al pasar el mouse */
+}
+
+/* ITEMS LOGIN */
+.dropdown-menu a {
+  display: block;
+  padding: 10px 15px;
+  color: black;
+  text-decoration: none;
+}
+
+/* HOVER */
+.dropdown-menu a:hover {
+  background: #eee;
+}
+
+/* ✨ ANIMACIÓN DROPDOWN */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px); /* 👉 Aparece desde arriba */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 🔥 LÍNEA PREMIUM ABAJO */
+.header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+}
+
+/* 🔥 LOGO BASE */
+.logo {
+  width: 110px;
+  cursor: pointer;
+  animation: floatLogo 3s ease-in-out infinite; /* 👉 Movimiento continuo */
   transition: transform 0.3s ease;
 }
 
-.arrow.rotate {
-  transform: rotate(180deg);
+/* 🌊 EFECTO FLOTANTE */
+@keyframes floatLogo {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); } /* 👉 Sube */
+  100% { transform: translateY(0px); } /* 👉 Baja */
 }
 
+/* 🔥 HOVER MÁS FUERTE */
+.logo:hover {
+  transform: scale(1.2) rotate(-5deg);
+}
 
+/* 🔷 CONTENEDOR DEL LOGO */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* 🔥 LOGO MÁS GRANDE */
+.logo {
+  height: 70px;
+  transition: transform 0.4s ease, filter 0.4s ease;
+  animation: floatLogo 3s ease-in-out infinite;
+}
+
+/* ✨ EFECTO HOVER */
+.logo:hover {
+  transform: scale(1.15) rotate(-2deg);
+  filter: drop-shadow(0px 0px 10px rgba(0, 183, 255, 0.6));
+}
+
+/* 🧠 NOMBRE EMPRESA */
+.logo-text {
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  letter-spacing: 1px;
+}
+
+/* 🔷 HEADER GENERAL */
+.header {
+  position: relative;
+  z-index: 1000;
+}
+
+/* 🔷 LÍNEA */
+.header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #00c6ff;
+  z-index: 1;
+}
+
+/* 🔽 CONTENEDOR */
+.dropdown {
+  position: relative;
+}
+
+/* 📋 MENÚ */
 .dropdown-menu {
   position: absolute;
+  top: 110%;
   right: 0;
-  top: 70px;
-  background: linear-gradient(135deg, #4facfe, #140375);
-  background-size: 200% 200%;
-  animation: gradientMove 6s ease infinite;
+  background: white;
   border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.2);
-  display: flex;
-  flex-direction: column;
-  min-width: 220px;
-  opacity: 0;
-  transform: translateY(-10px);
-  pointer-events: none;
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  padding: 10px 0;
+  min-width: 180px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  z-index: 2000; /* 👉 Más alto que todo */
 }
 
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-.dropdown-menu.show {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-
-.menu-item {
-  padding: 14px;
+/* ITEMS */
+.dropdown-menu a {
+  display: block;
+  padding: 10px 20px;
+  color: #333;
   text-decoration: none;
-  color: #fff;
+}
+
+.dropdown-menu a:hover {
+  background: #f1f1f1;
+}
+/* 🔥 BARRA DE BIENVENIDA */
+.welcome-bar {
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  color: white;
+  text-align: center;
+  padding: 8px;
+  font-size: 14px;
   font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: background 0.3s ease, transform 0.2s ease;
-  animation: fadeSlideIn 0.5s ease forwards;
+
+  animation: fadeDown 0.5s ease;
 }
 
-.menu-item:hover {
-  background: rgba(255,255,255,0.2);
-  transform: translateX(8px) scale(1.05);
-}
-
-@keyframes fadeSlideIn {
-  from { opacity: 0; transform: translateX(-15px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-
-.icon {
-  font-size: 1.2rem;
-}
-
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  
-  background: linear-gradient(135deg, #cecdcd, #404040, #4e4e4f);
-  background-size: 300% 300%;
-  animation: gradientMove 8s ease infinite;
-.app-header {
-  color: #011211;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 25px 60px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-
-.app-header h1, .app-header .welcome-sign {
-  font-size: 2.5rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  animation: neonGlow 2s ease-in-out infinite;
-}
-
-
-@keyframes neonGlow {
-  0%, 100% {
-    text-shadow: 0 0 10px #0ee7e3,
-                 0 0 20px #0ee7e3,
-                 0 0 30px #0ee7e3;
+/* ✨ ANIMACIÓN */
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
   }
-  50% {
-    text-shadow: 0 0 20px #0ee7e3,
-                 0 0 40px #0ee7e3,
-                 0 0 60px #0ee7e3;
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
+/* 🚀 BIENVENIDA PRO */
+.welcome-pro {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-30px);
+
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
+  color: white;
+
+  padding: 12px 25px;
+  border-radius: 30px;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+
+  z-index: 2000;
+
+  animation: slideFade 0.6s ease forwards;
 }
 
-@keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* ✨ ENTRADA */
+@keyframes slideFade {
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ❌ SALIDA SUAVE (opcional si quieres animarla luego) */
+.welcome-pro.hide {
+  animation: fadeOut 0.5s ease forwards;
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateX(-50%) translateY(-20px);
+  }
+}
+.header {
+  border-bottom: none !important;
+}
+
+.header::after {
+  display: none !important;
 }
