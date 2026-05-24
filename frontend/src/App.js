@@ -10,6 +10,10 @@ import Register from "./pages/Register";
 import Reserva from "./pages/Reserva";
 import MisReservas from "./pages/MisReservas";
 import ServicioDetalle from "./pages/ServicioDetalle";
+import Recuperar from "./pages/Recuperar";
+import ResetPassword from "./pages/ResetPassword";
+import AdminPanel from "./pages/AdminPanel";
+
 
 function App() {
   return (
@@ -20,7 +24,8 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registro" element={<Register />} />
-
+        <Route path="/recuperar" element={<Recuperar />} />
+        <Route path="/reset/:token" element={<ResetPassword />} />   
         {/* 🔒 Protegidas */}
         <Route path="/reserva" element={
           <PrivateRoute>
@@ -35,6 +40,7 @@ function App() {
         } />
 
         <Route path="/servicio/:tipo" element={<ServicioDetalle />} />
+        <Route path="/admin" element={<AdminPanel />} />
       </Routes>
     </Router>
   );

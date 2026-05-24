@@ -1,261 +1,147 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import "../styles/reserva.css";
 
 function Reserva() {
-  const initialForm = {
+  const [formData, setFormData] = useState({
     nombre: "",
     fecha: "",
     hora: "",
     servicio: "",
     tecnico: "",
-  };
+  });
 
-  const [form, setForm] = useState(initialForm);
   const [loading, setLoading] = useState(false);
-  const [confirmacion, setConfirmacion] = useState(null);
-  const [reservas, setReservas] = useState([]);
-  const [editando, setEditando] = useState(false);
-  const [reservaId, setReservaId] = useState(null);
 
-  const formRef = useRef();
-
-  // 🔐 Cargar usuario
-  useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem("user");
-      if (!storedUser || storedUser === "undefined" || storedUser === "null") return;
-
-      const user = JSON.parse(storedUser);
-      if (user?.nombre) {
-        setForm((prev) => ({
-          ...prev,
-          nombre: user.nombre,
-        }));
-      }
-    } catch (error) {
-      console.error("❌ Error leyendo user:", error);
-    }
-  }, []);
-
-  // 📥 Cargar reservas existentes
-  useEffect(() => {
-    const fetchReservas = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      try {
-        const res = await fetch("http://localhost:5000/api/reservas", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        if (res.ok) {
-          setReservas(data.reservas || []);
-        }
-      } catch (error) {
-        console.error("Error cargando reservas:", error);
-      }
-    };
-
-    fetchReservas();
-  }, []);
-
-  // 🔄 CAMBIOS
+  // ============================
+  // 📥 MANEJO DE INPUTS
+  // ============================
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  // 🚀 ENVIAR / EDITAR
+  // ============================
+  // 🚀 ENVIAR RESERVA
+  // ============================
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
 
-    if (!token) {
-      alert("⚠️ Debes iniciar sesión");
+    // ✅ VALIDACIÓN EXTRA (evita errores backend)
+    if (!formData.fecha || !formData.hora || !formData.servicio) {
+      alert("Completa los campos obligatorios");
       return;
     }
 
-    if (!form.nombre || !form.fecha || !form.hora || !form.servicio || !form.tecnico) {
-      alert("⚠️ Completa todos los campos");
-      return;
-    }
+    setLoading(true);
 
     try {
-      setLoading(true);
+      console.log("📤 ENVIANDO:", formData);
 
-      const url = editando
-        ? `http://localhost:5000/api/reservas/${reservaId}`
-        : "http://localhost:5000/api/reservas";
-
-      const method = editando ? "PUT" : "POST";
-
-      const res = await fetch(url, {
-        method,
+      const res = await fetch("http://localhost:5000/api/reservas", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(form),
+        body: JSON.stringify(formData),
       });
 
       const data = await res.json();
 
       if (!res.ok) {
-        alert(data.message || "❌ Error al guardar reserva");
+        alert(data.message || "Error al crear reserva");
         return;
       }
 
-      setConfirmacion(data.reserva || form);
+      // ✅ ALERT BONITO (puedes luego cambiar por toast)
+      alert("✅ Reserva creada correctamente");
 
-      // Actualizar lista
-      if (editando) {
-        setReservas((prev) =>
-          prev.map((r) => (r._id === reservaId ? data.reserva : r))
-        );
-      } else {
-        setReservas((prev) => [...prev, data.reserva]);
-      }
-
-      // Reset
-      setForm({ ...initialForm, nombre: form.nombre });
-      setEditando(false);
-      setReservaId(null);
-
-      if (formRef.current) formRef.current.reset();
+      // 🔄 RESET FORM
+      setFormData({
+        nombre: "",
+        fecha: "",
+        hora: "",
+        servicio: "",
+        tecnico: "",
+      });
 
     } catch (error) {
-      console.error("ERROR:", error);
-      alert("❌ Error de conexión");
+      console.error("❌ ERROR:", error);
+      alert("Error de conexión con el servidor");
     } finally {
       setLoading(false);
     }
   };
 
-  // ✏️ Cargar reserva en formulario
-  const cargarReserva = (reserva) => {
-    setForm({
-      nombre: reserva.nombre,
-      fecha: reserva.fecha,
-      hora: reserva.hora,
-      servicio: reserva.servicio,
-      tecnico: reserva.tecnico,
-    });
-    setReservaId(reserva._id);
-    setEditando(true);
-  };
-
-  // ❌ Cancelar reserva
-  const cancelarReserva = async (id) => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-
-    if (!window.confirm("¿Seguro que deseas cancelar esta reserva?")) return;
-
-    try {
-      const res = await fetch(`http://localhost:5000/api/reservas/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (res.ok) {
-        setReservas((prev) => prev.filter((r) => r._id !== id));
-      } else {
-        alert("❌ Error al cancelar reserva");
-      }
-    } catch (error) {
-      console.error("Error cancelando reserva:", error);
-    }
-  };
-
+  // ============================
+  // 🎨 UI
+  // ============================
   return (
-    <div className="reserva-page">
-      <div className="reserva-card">
-        <h2>{editando ? "Editar Reserva" : "Reserva tu Servicio"}</h2>
+    <div className="reserva-container">
+      <h2>Reserva tu Servicio</h2>
 
-        <form ref={formRef} className="reserva-form" onSubmit={handleSubmit}>
-          <label>Nombre</label>
-          <input
-            type="text"
-            name="nombre"
-            value={form.nombre}
-            onChange={handleChange}
-            placeholder="Escribe tu nombre"
-          />
+      <form onSubmit={handleSubmit} className="reserva-form">
 
-          <label>Fecha</label>
-          <input type="date" name="fecha" value={form.fecha} onChange={handleChange} />
+        <label>Nombre</label>
+        <input
+          type="text"
+          name="nombre"
+          value={formData.nombre}
+          onChange={handleChange}
+          placeholder="Tu nombre"
+        />
 
-          <label>Hora</label>
-          <input type="time" name="hora" value={form.hora} onChange={handleChange} />
+        <label>Fecha</label>
+        <input
+          type="date"
+          name="fecha"
+          value={formData.fecha}
+          onChange={handleChange}
+          required
+        />
 
-          <label>Servicio</label>
-          <select name="servicio" value={form.servicio} onChange={handleChange}>
-            <option value="">Selecciona servicio</option>
-            <option value="Electricidad">Electricidad</option>
-            <option value="Plomería">Plomería</option>
-            <option value="Cerrajería">Cerrajería</option>
-          </select>
+        <label>Hora</label>
+        <input
+          type="time"
+          name="hora"
+          value={formData.hora}
+          onChange={handleChange}
+          required
+        />
 
-          <label>Técnico</label>
-          <select name="tecnico" value={form.tecnico} onChange={handleChange}>
-            <option value="">Selecciona técnico</option>
-            <option value="Johan Valencia">Johan Valencia</option>
-            <option value="Laura López">Laura López</option>
-            <option value="Sofía Nova">Sofía Nova</option>
-          </select>
+        <label>Servicio</label>
+        <select
+          name="servicio"
+          value={formData.servicio}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Selecciona un servicio</option>
+          <option value="Electricidad">Electricidad</option>
+          <option value="Plomería">Plomería</option>
+          <option value="Cerrajería">Cerrajería</option> {/* ✅ CORRECTO */}
+        </select>
 
-          <button type="submit" disabled={loading}>
-            {loading ? "Guardando..." : editando ? "Actualizar Reserva" : "Confirmar Reserva"}
-          </button>
-        </form>
+        <label>Técnico</label>
+        <select
+          name="tecnico"
+          value={formData.tecnico}
+          onChange={handleChange}
+        >
+          <option value="">Selecciona técnico</option>
+          <option value="Johan Valencia">Johan Valencia</option>
+          <option value="Sofía Nova">Sofía Nova</option>
+          <option value="Laura López">Laura López</option>
+        </select>
 
-        {/* 🎉 MODAL */}
-        {confirmacion && (
-          <div className="modal-overlay">
-            <div className="modal">
-              <h3>✅ Reserva Confirmada</h3>
-              <p><strong>Nombre:</strong> {confirmacion.nombre}</p>
-              <p><strong>Fecha:</strong> {confirmacion.fecha}</p>
-              <p><strong>Hora:</strong> {confirmacion.hora}</p>
-              <p><strong>Servicio:</strong> {confirmacion.servicio}</p>
-              <p><strong>Técnico:</strong> {confirmacion.tecnico}</p>
-              <button className="close-btn" onClick={() => setConfirmacion(null)}>Cerrar</button>
-            </div>
-          </div>
-        )}
-      </div>
+        <button type="submit" disabled={loading}>
+          {loading ? "Guardando..." : "Reservar"}
+        </button>
 
-      {/* 📋 LISTA DE RESERVAS */}
-      <div className="lista-reservas">
-        <h2>Mis Reservas</h2>
-        {reservas.length === 0 ? (
-          <p>No tienes reservas registradas.</p>
-        ) : (
-          <ul>
-            {reservas.map((reserva) => (
-              <li key={reserva._id}>
-                <strong>{reserva.servicio}</strong> - {reserva.fecha} {reserva.hora} con {reserva.tecnico}
-                <div className="acciones">
-                  <button 
-                    className="btn-editar" 
-                    onClick={() => cargarReserva(reserva)}
-                  >
-                    ✏️ Editar
-                  </button>
-                  <button 
-                    className="btn-cancelar" 
-                    onClick={() => cancelarReserva(reserva._id)}
-                  >
-                    ❌ Cancelar Reserva
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+      </form>
     </div>
   );
 }

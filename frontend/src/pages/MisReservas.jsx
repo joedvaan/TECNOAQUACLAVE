@@ -3,75 +3,207 @@ import "../styles/misReservas.css";
 
 function MisReservas() {
   const [reservas, setReservas] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // 🔥 NUEVOS ESTADOS
+  const [modalOpen, setModalOpen] = useState(false);
+  const [reservaEditando, setReservaEditando] = useState(null);
+  const [mensaje, setMensaje] = useState("");
+
+  // ============================
+  // 🔄 OBTENER RESERVAS
+  // ============================
+  const fetchReservas = async () => {
+    try {
+      const res = await fetch("http://localhost:5000/api/reservas");
+      const data = await res.json();
+
+      setReservas(Array.isArray(data) ? data : []);
+
+    } catch (error) {
+      console.error(error);
+      setReservas([]);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchReservas();
   }, []);
 
-  const fetchReservas = async () => {
-    try {
-      const token = localStorage.getItem("token");
+  // ============================
+  // ❌ CANCELAR
+  // ============================
+  const cancelarReserva = async (id) => {
+    if (!window.confirm("¿Cancelar esta reserva?")) return;
 
-      const res = await fetch("http://localhost:5000/api/reservas", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    try {
+      await fetch(`http://localhost:5000/api/reservas/${id}`, {
+        method: "DELETE",
       });
+
+      setReservas(reservas.filter(r => r._id !== id));
+      mostrarMensaje("Reserva cancelada correctamente ❌");
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // ============================
+  // ✏️ ABRIR MODAL
+  // ============================
+  const abrirEditar = (reserva) => {
+    setReservaEditando(reserva);
+    setModalOpen(true);
+  };
+
+  // ============================
+  // 💾 GUARDAR EDICIÓN
+  // ============================
+  const guardarEdicion = async () => {
+    try {
+      const res = await fetch(
+        `http://localhost:5000/api/reservas/${reservaEditando._id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(reservaEditando),
+        }
+      );
 
       const data = await res.json();
 
-      // 🔥 DEBUG (CLAVE)
-      console.log("📦 DATA DEL BACK:", data);
+      setReservas(reservas.map(r =>
+        r._id === data._id ? data : r
+      ));
 
-      if (res.ok) {
-        // ✅ CORRECCIÓN AQUÍ
-        setReservas(data);
-      }
+      setModalOpen(false);
+      mostrarMensaje("Reserva actualizada correctamente ✏️");
 
     } catch (error) {
-      console.error("❌ ERROR FETCH:", error);
+      console.error(error);
     }
   };
 
-  const eliminarReserva = async (id) => {
-    try {
-      const token = localStorage.getItem("token");
-
-      await fetch(`http://localhost:5000/api/reservas/${id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      setReservas(prev => prev.filter(r => r._id !== id));
-
-    } catch (error) {
-      console.error("❌ ERROR DELETE:", error);
-    }
+  // ============================
+  // 🔔 ALERTA BONITA
+  // ============================
+  const mostrarMensaje = (texto) => {
+    setMensaje(texto);
+    setTimeout(() => setMensaje(""), 3000);
   };
+
+  if (loading) return <p style={{ color: "white" }}>Cargando...</p>;
 
   return (
-    <div className="mis-reservas-page">
-      <h2>📅 Mis Reservas</h2>
+    <div className="mis-reservas-container">
 
-      {reservas.length === 0 ? (
-        <h3>No tienes reservas aún 😢</h3>
-      ) : (
-        <div className="reservas-grid">
-          {reservas.map((r) => (
-            <div key={r._id} className="reserva-card">
+      {/* 🔔 ALERTA BONITA */}
+      {mensaje && <div className="alerta">{mensaje}</div>}
+
+      <h2 className="titulo">Mis Reservas</h2>
+
+      <div className="grid-reservas">
+        {reservas.map((r) => (
+          <div className="card-reserva" key={r._id}>
+
+            <div className="card-header">
               <h3>{r.servicio}</h3>
-              <p><strong>Nombre:</strong> {r.nombre}</p>
-              <p><strong>Fecha:</strong> {r.fecha}</p>
-              <p><strong>Hora:</strong> {r.hora}</p>
-              <p><strong>Técnico:</strong> {r.tecnico}</p>
+            </div>
 
-              <button onClick={() => eliminarReserva(r._id)}>
+            <div className="card-body">
+              <p><strong>👤</strong> {r.nombre}</p>
+              <p><strong>📅</strong> {r.fecha}</p>
+              <p><strong>⏰</strong> {r.hora}</p>
+              <p><strong>🛠</strong> {r.tecnico}</p>
+            </div>
+
+            <div className="acciones">
+              <button className="btn editar" onClick={() => abrirEditar(r)}>
+                ✏️ Editar
+              </button>
+
+              <button className="btn cancelar" onClick={() => cancelarReserva(r._id)}>
                 ❌ Cancelar
               </button>
             </div>
-          ))}
+          </div>
+        ))}
+      </div>
+
+      {/* ============================
+          🪟 MODAL EDITAR
+      ============================ */}
+      {modalOpen && (
+        <div className="modal">
+          <div className="modal-content">
+
+            <h3>Editar Reserva</h3>
+
+            {/* SERVICIO */}
+<select
+  value={reservaEditando.servicio || ""}
+  onChange={(e) =>
+    setReservaEditando({ ...reservaEditando, servicio: e.target.value })
+  }
+>
+  <option value="">Selecciona servicio</option>
+  <option value="Electricidad">Electricidad</option>
+  <option value="Plomería">Plomería</option>
+  <option value="Mantenimiento">Cerrajeria</option>
+  <option value="Instalación">Instalación</option>
+</select>
+
+{/* TÉCNICO */}
+<select
+  value={reservaEditando.tecnico || ""}
+  onChange={(e) =>
+    setReservaEditando({ ...reservaEditando, tecnico: e.target.value })
+  }
+>
+  <option value="">Selecciona técnico</option>
+  <option value="Sofía Nova">Sofía Nova</option>
+  <option value="Carlos Pérez">Carlos Pérez</option>
+  <option value="Juan Gómez">Juan Gómez</option>
+</select>
+
+            <input
+              type="time"
+              value={reservaEditando.hora}
+              onChange={(e) =>
+                setReservaEditando({ ...reservaEditando, hora: e.target.value })
+              }
+            />
+
+            <input
+              value={reservaEditando.servicio}
+              onChange={(e) =>
+                setReservaEditando({ ...reservaEditando, servicio: e.target.value })
+              }
+              placeholder="Servicio"
+            />
+
+            <input
+              value={reservaEditando.tecnico}
+              onChange={(e) =>
+                setReservaEditando({ ...reservaEditando, tecnico: e.target.value })
+              }
+              placeholder="Técnico"
+            />
+
+            <div className="modal-buttons">
+              <button onClick={guardarEdicion} className="btn editar">
+                Guardar
+              </button>
+
+              <button onClick={() => setModalOpen(false)} className="btn cancelar">
+                Cancelar
+              </button>
+            </div>
+
+          </div>
         </div>
       )}
     </div>

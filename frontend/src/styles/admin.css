@@ -1,0 +1,202 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.admin-container {
+
+  display: flex;
+
+  min-height: 100vh;
+
+  background: #111;
+
+  color: white;
+}
+
+
+/* 🔥 SIDEBAR */
+
+.sidebar {
+
+  width: 260px;
+
+  background: #8b0000;
+
+  padding: 40px 20px;
+}
+
+.logo {
+
+  text-align: center;
+
+  margin-bottom: 50px;
+
+  font-size: 30px;
+}
+
+.sidebar ul {
+
+  list-style: none;
+}
+
+.sidebar li {
+
+  padding: 18px;
+
+  margin-bottom: 15px;
+
+  border-radius: 12px;
+
+  cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.sidebar li:hover {
+
+  background: rgba(255,255,255,0.15);
+}
+
+
+/* 🔥 MAIN */
+
+.admin-main {
+
+  flex: 1;
+
+  padding: 40px;
+}
+
+.admin-main h1 {
+
+  margin-bottom: 40px;
+
+  font-size: 40px;
+}
+
+
+/* 🔥 CARDS */
+
+.cards {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(220px,1fr));
+
+  gap: 25px;
+
+  margin-bottom: 50px;
+}
+
+.card-admin {
+
+  background: #1c1c1c;
+
+  padding: 35px;
+
+  border-radius: 25px;
+
+  text-align: center;
+
+  transition: 0.3s;
+
+  box-shadow:
+    0 8px 20px rgba(0,0,0,0.3);
+}
+
+.card-admin:hover {
+
+  transform: translateY(-8px);
+}
+
+.icon-admin {
+
+  font-size: 50px;
+
+  margin-bottom: 20px;
+
+  color: #ff2a2a;
+}
+
+.card-admin h2 {
+
+  font-size: 35px;
+
+  margin-bottom: 10px;
+}
+
+
+/* 🔥 TABLA */
+
+.table-container {
+
+  background: #1b1b1b;
+
+  padding: 30px;
+
+  border-radius: 25px;
+}
+
+.table-container h2 {
+
+  margin-bottom: 25px;
+}
+
+table {
+
+  width: 100%;
+
+  border-collapse: collapse;
+}
+
+th,
+td {
+
+  padding: 18px;
+
+  text-align: left;
+}
+
+th {
+
+  background: #8b0000;
+}
+
+tr:nth-child(even) {
+
+  background: #222;
+}
+
+.pendiente {
+
+  color: orange;
+
+  font-weight: bold;
+}
+
+.completado {
+
+  color: #00ff99;
+
+  font-weight: bold;
+}
+
+
+/* 🔥 RESPONSIVE */
+
+@media (max-width: 768px) {
+
+  .admin-container {
+
+    flex-direction: column;
+  }
+
+  .sidebar {
+
+    width: 100%;
+  }
+
+}

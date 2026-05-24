@@ -21,11 +21,9 @@ const reservaSchema = new mongoose.Schema({
   tecnico: {
     type: String,
     required: true
-  },
-  usuario: {
-    type: String,
-    required: true
   }
-}, { timestamps: true });
+}, {
+  timestamps: true
+});
 
 module.exports = mongoose.model("Reserva", reservaSchema);
